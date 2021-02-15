@@ -28,7 +28,7 @@ Resources:
   ControlPlane:
     Type: 'AWS::EKS::Cluster'
     Properties:
-      Name: dso-cluster
+      # Name: dso-cluster
       ResourcesVpcConfig:
         SecurityGroupIds:
           - !Ref ControlPlaneSecurityGroup
