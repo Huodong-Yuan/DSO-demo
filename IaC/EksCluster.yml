@@ -33,9 +33,9 @@ Resources:
         SecurityGroupIds:
           - !Ref ControlPlaneSecurityGroup
         SubnetIds:
+          - !Ref SubnetPublicAPEAST1C
           - !Ref SubnetPublicAPEAST1A
           - !Ref SubnetPublicAPEAST1B
-          - !Ref SubnetPublicAPEAST1C
           - !Ref SubnetPrivateAPEAST1A
           - !Ref SubnetPrivateAPEAST1B
           - !Ref SubnetPrivateAPEAST1C
@@ -379,9 +379,9 @@ Outputs:
   SubnetsPublic:
     Value: !Join 
       - ','
-      - - !Ref SubnetPublicAPEAST1A
+      - - !Ref SubnetPublicAPEAST1C
+        - !Ref SubnetPublicAPEAST1A
         - !Ref SubnetPublicAPEAST1B
-        - !Ref SubnetPublicAPEAST1C
     Export:
       Name: !Sub '${AWS::StackName}::SubnetsPublic'
   VPC:
