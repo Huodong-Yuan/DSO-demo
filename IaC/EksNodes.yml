@@ -21,56 +21,54 @@ Resources:
     Type: 'AWS::EC2::SecurityGroupEgress'
     Properties:
       Description: >-
-        Allow control plane to communicate with worker nodes in group
-        std-workers (kubelet and workload TCP ports)
+        Allow control plane to communicate with worker nodes in group workers
+        (kubelet and workload TCP ports)
       DestinationSecurityGroupId: !Ref SG
       FromPort: 1025
-      GroupId: !ImportValue 'eksctl-dso-cluster-cluster::SecurityGroup'
+      GroupId: !ImportValue 'eksctl-dso-cluster::SecurityGroup'
       IpProtocol: tcp
       ToPort: 65535
   EgressInterClusterAPI:
     Type: 'AWS::EC2::SecurityGroupEgress'
     Properties:
       Description: >-
-        Allow control plane to communicate with worker nodes in group
-        std-workers (workloads using HTTPS port, commonly used with extension
-        API servers)
+        Allow control plane to communicate with worker nodes in group workers
+        (workloads using HTTPS port, commonly used with extension API servers)
       DestinationSecurityGroupId: !Ref SG
       FromPort: 443
-      GroupId: !ImportValue 'eksctl-dso-cluster-cluster::SecurityGroup'
+      GroupId: !ImportValue 'eksctl-dso-cluster::SecurityGroup'
       IpProtocol: tcp
       ToPort: 443
   IngressInterCluster:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
       Description: >-
-        Allow worker nodes in group std-workers to communicate with control
-        plane (kubelet and workload TCP ports)
+        Allow worker nodes in group workers to communicate with control plane
+        (kubelet and workload TCP ports)
       FromPort: 1025
       GroupId: !Ref SG
       IpProtocol: tcp
-      SourceSecurityGroupId: !ImportValue 'eksctl-dso-cluster-cluster::SecurityGroup'
+      SourceSecurityGroupId: !ImportValue 'eksctl-dso-cluster::SecurityGroup'
       ToPort: 65535
   IngressInterClusterAPI:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
       Description: >-
-        Allow worker nodes in group std-workers to communicate with control
-        plane (workloads using HTTPS port, commonly used with extension API
-        servers)
+        Allow worker nodes in group workers to communicate with control plane
+        (workloads using HTTPS port, commonly used with extension API servers)
       FromPort: 443
       GroupId: !Ref SG
       IpProtocol: tcp
-      SourceSecurityGroupId: !ImportValue 'eksctl-dso-cluster-cluster::SecurityGroup'
+      SourceSecurityGroupId: !ImportValue 'eksctl-dso-cluster::SecurityGroup'
       ToPort: 443
   IngressInterClusterCP:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
       Description: >-
         Allow control plane to receive API requests from worker nodes in group
-        std-workers
+        workers
       FromPort: 443
-      GroupId: !ImportValue 'eksctl-dso-cluster-cluster::SecurityGroup'
+      GroupId: !ImportValue 'eksctl-dso-cluster::SecurityGroup'
       IpProtocol: tcp
       SourceSecurityGroupId: !Ref SG
       ToPort: 443
@@ -88,13 +86,13 @@ Resources:
       Tags:
         - Key: Name
           PropagateAtLaunch: 'true'
-          Value: dso-cluster-std-workers-Node
-        - Key: kubernetes.io/cluster/dso-cluster
+          Value: dso-workers-Node
+        - Key: kubernetes.io/cluster/dso
           PropagateAtLaunch: 'true'
           Value: owned
       VPCZoneIdentifier: !Split 
         - ','
-        - !ImportValue 'eksctl-dso-cluster-cluster::SubnetsPublic'
+        - !ImportValue 'eksctl-dso-cluster::SubnetsPublic'
     UpdatePolicy:
       AutoScalingRollingUpdate:
         MaxBatchSize: '1'
@@ -123,10 +121,10 @@ Resources:
         NetworkInterfaces:
           - DeviceIndex: 0
             Groups:
-              - !ImportValue 'eksctl-dso-cluster-cluster::SharedNodeSecurityGroup'
+              - !ImportValue 'eksctl-dso-cluster::SharedNodeSecurityGroup'
               - !Ref SG
         UserData: >-
-          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
+          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
       LaunchTemplateName: !Sub '${AWS::StackName}'
   NodeInstanceProfile:
     Type: 'AWS::IAM::InstanceProfile'
@@ -163,13 +161,13 @@ Resources:
     Properties:
       GroupDescription: >-
         Communication between the control plane and worker nodes in group
-        std-workers
+        workers
       Tags:
-        - Key: kubernetes.io/cluster/dso-cluster
+        - Key: kubernetes.io/cluster/dso
           Value: owned
         - Key: Name
           Value: !Sub '${AWS::StackName}/SG'
-      VpcId: !ImportValue 'eksctl-dso-cluster-cluster::VPC'
+      VpcId: !ImportValue 'eksctl-dso-cluster::VPC'
 Outputs:
   FeatureLocalSecurityGroup:
     Value: true

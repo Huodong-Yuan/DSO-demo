@@ -28,17 +28,15 @@ Resources:
   ControlPlane:
     Type: 'AWS::EKS::Cluster'
     Properties:
-      # Name: dso-cluster
+      Name: dso
       ResourcesVpcConfig:
         SecurityGroupIds:
           - !Ref ControlPlaneSecurityGroup
         SubnetIds:
-          - !Ref SubnetPublicAPEAST1C
           - !Ref SubnetPublicAPEAST1A
           - !Ref SubnetPublicAPEAST1B
           - !Ref SubnetPrivateAPEAST1A
           - !Ref SubnetPrivateAPEAST1B
-          - !Ref SubnetPrivateAPEAST1C
       RoleArn: !GetAtt 
         - ServiceRole
         - Arn
@@ -119,12 +117,6 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       NatGatewayId: !Ref NATGateway
       RouteTableId: !Ref PrivateRouteTableAPEAST1B
-  NATPrivateSubnetRouteAPEAST1C:
-    Type: 'AWS::EC2::Route'
-    Properties:
-      DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId: !Ref NATGateway
-      RouteTableId: !Ref PrivateRouteTableAPEAST1C
   PolicyCloudWatchMetrics:
     Type: 'AWS::IAM::Policy'
     Properties:
@@ -167,13 +159,6 @@ Resources:
         - Key: Name
           Value: !Sub '${AWS::StackName}/PrivateRouteTableAPEAST1B'
       VpcId: !Ref VPC
-  PrivateRouteTableAPEAST1C:
-    Type: 'AWS::EC2::RouteTable'
-    Properties:
-      Tags:
-        - Key: Name
-          Value: !Sub '${AWS::StackName}/PrivateRouteTableAPEAST1C'
-      VpcId: !Ref VPC
   PublicRouteTable:
     Type: 'AWS::EC2::RouteTable'
     Properties:
@@ -199,11 +184,6 @@ Resources:
     Properties:
       RouteTableId: !Ref PrivateRouteTableAPEAST1B
       SubnetId: !Ref SubnetPrivateAPEAST1B
-  RouteTableAssociationPrivateAPEAST1C:
-    Type: 'AWS::EC2::SubnetRouteTableAssociation'
-    Properties:
-      RouteTableId: !Ref PrivateRouteTableAPEAST1C
-      SubnetId: !Ref SubnetPrivateAPEAST1C
   RouteTableAssociationPublicAPEAST1A:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
@@ -214,11 +194,6 @@ Resources:
     Properties:
       RouteTableId: !Ref PublicRouteTable
       SubnetId: !Ref SubnetPublicAPEAST1B
-  RouteTableAssociationPublicAPEAST1C:
-    Type: 'AWS::EC2::SubnetRouteTableAssociation'
-    Properties:
-      RouteTableId: !Ref PublicRouteTable
-      SubnetId: !Ref SubnetPublicAPEAST1C
   ServiceRole:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -248,7 +223,7 @@ Resources:
     Type: 'AWS::EC2::Subnet'
     Properties:
       AvailabilityZone: ap-east-1a
-      CidrBlock: 192.168.96.0/19
+      CidrBlock: 192.168.64.0/19
       Tags:
         - Key: kubernetes.io/role/internal-elb
           Value: '1'
@@ -259,23 +234,12 @@ Resources:
     Type: 'AWS::EC2::Subnet'
     Properties:
       AvailabilityZone: ap-east-1b
-      CidrBlock: 192.168.128.0/19
+      CidrBlock: 192.168.96.0/19
       Tags:
         - Key: kubernetes.io/role/internal-elb
           Value: '1'
         - Key: Name
           Value: !Sub '${AWS::StackName}/SubnetPrivateAPEAST1B'
-      VpcId: !Ref VPC
-  SubnetPrivateAPEAST1C:
-    Type: 'AWS::EC2::Subnet'
-    Properties:
-      AvailabilityZone: ap-east-1c
-      CidrBlock: 192.168.160.0/19
-      Tags:
-        - Key: kubernetes.io/role/internal-elb
-          Value: '1'
-        - Key: Name
-          Value: !Sub '${AWS::StackName}/SubnetPrivateAPEAST1C'
       VpcId: !Ref VPC
   SubnetPublicAPEAST1A:
     Type: 'AWS::EC2::Subnet'
@@ -300,18 +264,6 @@ Resources:
           Value: '1'
         - Key: Name
           Value: !Sub '${AWS::StackName}/SubnetPublicAPEAST1B'
-      VpcId: !Ref VPC
-  SubnetPublicAPEAST1C:
-    Type: 'AWS::EC2::Subnet'
-    Properties:
-      AvailabilityZone: ap-east-1c
-      CidrBlock: 192.168.64.0/19
-      MapPublicIpOnLaunch: true
-      Tags:
-        - Key: kubernetes.io/role/elb
-          Value: '1'
-        - Key: Name
-          Value: !Sub '${AWS::StackName}/SubnetPublicAPEAST1C'
       VpcId: !Ref VPC
   VPC:
     Type: 'AWS::EC2::VPC'
@@ -373,14 +325,12 @@ Outputs:
       - ','
       - - !Ref SubnetPrivateAPEAST1A
         - !Ref SubnetPrivateAPEAST1B
-        - !Ref SubnetPrivateAPEAST1C
     Export:
       Name: !Sub '${AWS::StackName}::SubnetsPrivate'
   SubnetsPublic:
     Value: !Join 
       - ','
-      - - !Ref SubnetPublicAPEAST1C
-        - !Ref SubnetPublicAPEAST1A
+      - - !Ref SubnetPublicAPEAST1A
         - !Ref SubnetPublicAPEAST1B
     Export:
       Name: !Sub '${AWS::StackName}::SubnetsPublic'
