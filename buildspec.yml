@@ -15,7 +15,7 @@ phases:
       - echo Build completed on `date`
 artifacts:
   files:
-    - IoC/*
+    - IaC/*
 cache:
   paths:
     - '/root/.m2/**/*'
