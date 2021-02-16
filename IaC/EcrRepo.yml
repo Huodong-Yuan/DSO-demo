@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Elastic Container Registery
+Resources:
+  MyRepository: 
+    Type: AWS::ECR::Repository
+    Properties: 
+      RepositoryName: "dso-repo"
+      ImageScanningConfiguration: 
+        scanOnPush: "true"
+      RepositoryPolicyText: 
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Sid: AllowPushPull
+            Effect: Allow
+            Principal: 
+              AWS: 
+                - "arn:aws:iam::937127767762:user/yhd"
+                - "arn:aws:iam::937127767762:user/ljx"
+            Action: 
+              - "ecr:GetDownloadUrlForLayer"
+              - "ecr:BatchGetImage"
+              - "ecr:BatchCheckLayerAvailability"
+              - "ecr:PutImage"
+              - "ecr:InitiateLayerUpload"
+              - "ecr:UploadLayerPart"
+              - "ecr:CompleteLayerUpload"
