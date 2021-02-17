@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Amazon EKS Sample VPC - Private and Public subnets'
+
+Parameters:
+ 
+Resources:
+  EKSIAMRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+          Principal:
+            Service:
+              - eks.amazonaws.com
+          Action:
+            - 'sts:AssumeRole'
+      RoleName: EksIamRoleName
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+        - arn:aws:iam::aws:policy/AmazonEKSServicePolicy
+
+  EKSCluster:
+      Type: AWS::EKS::Cluster
+      Properties:
+        Name: yhdEksCluster
+        RoleArn:
+          "Fn::GetAtt": ["EksIamRoleName", "Arn"]
+          ResourcesVpcConfig:
+            SecurityGroupIds:
+            - !ImportValue 'eks-vpc-private-subnets::SecurityGroup'
+            SubnetIds:
+            - !ImportValue 'eks-vpc-private-subnets::PublicSubnet01'
+            - !ImportValue 'eks-vpc-private-subnets::PublicSubnet02'
+            - !ImportValue 'eks-vpc-private-subnets::PrivateSubnet01'
+            - !ImportValue 'eks-vpc-private-subnets::PrivateSubnet01'
+      DependsOn: EKSIAMRole
