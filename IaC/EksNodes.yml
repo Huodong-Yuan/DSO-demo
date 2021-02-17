@@ -86,7 +86,7 @@ Resources:
       Tags:
         - Key: Name
           PropagateAtLaunch: 'true'
-          Value: dso-workers-Node
+          Value: workers-Node
         - Key: kubernetes.io/cluster/dso
           PropagateAtLaunch: 'true'
           Value: owned
