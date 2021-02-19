@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Amazon EKS Sample VPC - Private and Public subnets'
+
+Parameters:
+  ProjectName:
+    Description: Project Name to identify stack and infrastructure
+    Type: String
+    Default: DevSecOpsDemo
+
+  ClusterName:
+    Description: EKS Cluster Name
+    Type: String
+    Default: yhdEksCluster
+
+Resources:
+  EKSIAMRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: 
+                - eks.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      RoleName: yhdEksClusterRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+        - arn:aws:iam::aws:policy/AmazonEKSServicePolicy
+
+  EKSCluster:
+    Type: AWS::EKS::Cluster
+    DependsOn: EKSIAMRole
+    Properties:
+      Name: !Ref ClusterName
+      RoleArn:
+        "Fn::GetAtt": ["EKSIAMRole", "Arn"]
+      ResourcesVpcConfig:
+        SecurityGroupIds:
+        - Fn::ImportValue:
+            !Sub ${ProjectName}-ControlPlaneSecurityGroup
+        SubnetIds: !Split
+          - ","           
+          - Fn::ImportValue:
+              !Sub ${ProjectName}-SubnetIds

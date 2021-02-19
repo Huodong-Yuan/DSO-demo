@@ -3,9 +3,14 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - aws s3 sync ./IaC/ s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
+      - aws s3 sync ./infrastructure/ s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      #- curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+      #- sudo mv /tmp/eksctl /usr/local/bin
+      #- eksctl create cluster -f ./infrastructure/cluster.yaml
+      #- eksctl scale nodegroup --cluster=yhdEks --nodes=5, --name=ng-e56250ca
+
   build:
     commands:
       - echo Build started on `date`
@@ -18,11 +23,11 @@ phases:
       - echo Pushing the Docker image...
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - sleep 2m
-      - ./TestScanResult.sh
+      - test-scan-result.sh
 
 artifacts:
   files:
-    - IaC/*
+    - infrastructure/* 
 cache:
   paths:
     - '/root/.m2/**/*'

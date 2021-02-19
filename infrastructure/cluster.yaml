@@ -1,0 +1,17 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: yhdEks3
+  region: ap-east-1
+
+nodeGroups:
+  - name: workers
+    instanceType: t3.nano
+    availabilityZones: ["ap-east-1a","ap-east-1b"]
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3
+    volumeSize: 10
+    volumeType: st1
+availabilityZones: ["ap-east-1a","ap-east-1b"]
