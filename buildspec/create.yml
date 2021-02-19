@@ -26,8 +26,7 @@ phases:
       - echo Pushing the Docker image...
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - sleep 2m
-      #- test-scan-result.sh
-      - isHigh=$(aws ecr describe-image-scan-findings --repository-name dso-repo --image-id imageTag=$IMAGE_TAG --region ap-east-1 | grep "\"severity\": \"HIGH\"") 
+      - isHigh=$(aws ecr describe-image-scan-findings --repository-name dso-repo --image-id imageTag=$IMAGE_TAG --region ap-east-1 | grep "\"severity\":: \"HIGH\"") 
       - if [ -z "$isHigh" ]; then echo "Not high"; else echo "$isHigh" && exit 1; fi
       - kubectl create deployment $DEPLOYMENT --image=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - kubectl expose deployment $DEPLOYMENT --type=LoadBalancer --port 80 --target-port 80
