@@ -7,11 +7,11 @@ metadata:
 
 nodeGroups:
   - name: workers
-    instanceType: t3.nano
+    instanceType: t3.micro
     availabilityZones: ["ap-east-1a","ap-east-1b"]
     desiredCapacity: 2
     minSize: 1
     maxSize: 3
     volumeSize: 10
-    volumeType: st1
+    volumeType: gp2
 availabilityZones: ["ap-east-1a","ap-east-1b"]
