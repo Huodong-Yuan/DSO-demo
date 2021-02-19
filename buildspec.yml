@@ -3,6 +3,11 @@ version: 0.2
 phases:
   pre_build:
     commands:
+      - IMAGE_TAG=1.1
+      - IMAGE_REPO_NAME=dso-repo
+      - $AWS_DEFAULT_REGION=ap-east-1
+      - $AWS_ACCOUNT_ID=93712776776
+      - DEPLOYMENT=dso-demo
       - aws s3 sync ./infrastructure/ s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
@@ -11,7 +16,6 @@ phases:
 
   build:
     commands:
-      - IMAGE_TAG=1.1
       - echo Build started on `date`
       - echo Building the Docker image...          
       - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
@@ -22,8 +26,9 @@ phases:
       - echo Pushing the Docker image...
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - sleep 2m
-      - test-scan-result.sh
-      - DEPLOYMENT=dso-demo
+      #- test-scan-result.sh
+      - isHigh=$(aws ecr describe-image-scan-findings --repository-name dso-repo --image-id imageTag=1.0 --region ap-east-1 | grep "\"severity\": \"HIGH\"") 
+      - if [ -z "$isHigh" ]; then echo "Not high"; else echo "$isHigh" && exit 1; fi
       - kubectl set image deployment/$DEPLOYMENT dso-repo=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       #- kubectl scale $DEPLOYMENT dso-demo --replicas=3
 
