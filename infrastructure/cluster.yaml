@@ -2,7 +2,7 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: yhdEks3
+  name: yhdEks
   region: ap-east-1
 
 nodeGroups:
