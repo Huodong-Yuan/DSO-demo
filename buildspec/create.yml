@@ -4,14 +4,15 @@ phases:
   pre_build:
     commands:
       - aws s3 sync ./infrastructure/ s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
+      - aws cloudformation create-stack --stack-name ecr-repo --template-url https://cf-templates-i6aohmzkcsjf-ap-east-1.s3.ap-east-1.amazonaws.com/templates/ecr-repository.yaml
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-      # scale nodes
-      #- eksctl scale nodegroup --cluster=yhdEks --nodes=5, --name=ng-e56250ca
+      # Create EKS cluster (only run below command for the first time)
+      - eksctl create cluster -f ./infrastructure/cluster.yaml
 
   build:
     commands:
-      - IMAGE_TAG=1.1
+      - IMAGE_TAG=1.0
       - echo Build started on `date`
       - echo Building the Docker image...          
       - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
@@ -24,8 +25,8 @@ phases:
       - sleep 2m
       - test-scan-result.sh
       - DEPLOYMENT=dso-demo
-      - kubectl set image deployment/$DEPLOYMENT dso-repo=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-      #- kubectl scale $DEPLOYMENT dso-demo --replicas=3
+      - kubectl create deployment $DEPLOYMENT --image=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - kubectl expose deployment $DEPLOYMENT --type=LoadBalancer --port 80 --target-port 80
 
 artifacts:
   files:

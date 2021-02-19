@@ -71,3 +71,6 @@ aws ecr batch-delete-image --repository-name demo --image-ids imageDigest=sha256
 
 # delete entire repository --force is to delete images in repo if present
 aws ecr delete-repository --repository-name demo --force
+
+#- curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+#- sudo mv /tmp/eksctl /usr/local/bin
