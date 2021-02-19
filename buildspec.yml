@@ -8,7 +8,7 @@ phases:
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       #- curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
       #- sudo mv /tmp/eksctl /usr/local/bin
-      #- eksctl create cluster -f ./infrastructure/cluster.yaml
+      - eksctl create cluster -f ./infrastructure/cluster.yaml
       #- eksctl scale nodegroup --cluster=yhdEks --nodes=5, --name=ng-e56250ca
 
   build:
