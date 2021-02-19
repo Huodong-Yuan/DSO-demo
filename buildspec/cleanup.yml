@@ -8,25 +8,14 @@ phases:
 
   build:
     commands:
-      - IMAGE_TAG=1.0
-      - echo Build started on `date`
-      - echo Building the Docker image...          
-      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      # nothing to do in build phase
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker image...
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-      - sleep 2m
-      - test-scan-result.sh
-      - DEPLOYMENT=dso-demo
-      - kubectl create deployment $DEPLOYMENT --image=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-      - kubectl set image deployment/$DEPLOYMENT dso-repo=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      # nothing to do in post_build phase
 
 artifacts:
   files:
     #- infrastructure/* 
 cache:
   paths:
-    - '/root/.m2/**/*'
+    #- '/root/.m2/**/*'
