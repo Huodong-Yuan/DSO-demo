@@ -3,7 +3,7 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - IMAGETAG=1.1
+      - IMAGETAG=1.2
       #- IMAGE_REPO_NAME=dso-repo
       #- $AWS_DEFAULT_REGION=ap-east-1
       #- $AWS_ACCOUNT_ID=93712776776
