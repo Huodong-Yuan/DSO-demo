@@ -1,13 +1,16 @@
 version: 0.2
 
+env:
+  variables:
+    IMAGETAG: "1.2"
+    IMAGE_REPO_NAME: "dso-repo"
+    AWS_DEFAULT_REGION: "ap-east-1"
+    AWS_ACCOUNT_ID: "93712776776"
+    DEPLOYMENT: "dso-demo"
+
 phases:
   pre_build:
     commands:
-      - IMAGETAG=1.2
-      #- IMAGE_REPO_NAME=dso-repo
-      #- $AWS_DEFAULT_REGION=ap-east-1
-      #- $AWS_ACCOUNT_ID=93712776776
-      - DEPLOYMENT=dso-demo
       - aws s3 sync ./infrastructure/ s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
@@ -31,8 +34,8 @@ phases:
       - if [ -z "$ISHIGH" ]; then echo "Not high"; else echo "$ISHIGH"; fi
       #- kubectl scale $DEPLOYMENT dso-demo --replicas=3
 
-artifacts:
-  files:
+#artifacts:
+#  files:
     #- infrastructure/* 
 cache:
   paths:

@@ -1,0 +1,33 @@
+version: 0.2
+
+env:
+  variables:
+    STACK_NAME: "eksctl-yhdEks-cluster"
+
+phases:
+  pre_build:
+    commands:
+      - pip install awscli --upgrade
+      - aws s3 sync ./infrastructure/ s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
+      # scale nodes
+      #- eksctl scale nodegroup --cluster=yhdEks --nodes=5, --name=ng-e56250ca
+
+  build:
+    commands:
+      - echo Build started on `date`
+      # Environment drift detection
+      - /bin/sh infrastructure/check-drift.sh $STACK_NAME
+
+      # EncryptionConfig detection
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      #- kubectl scale $DEPLOYMENT dso-demo --replicas=3
+
+artifacts:
+  files:
+    - infrastructure/* 
+#cache:
+#  paths:
+#    - '/root/.m2/**/*'
