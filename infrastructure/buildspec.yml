@@ -7,9 +7,7 @@ env:
 phases:
   pre_build:
     commands:
-      #- pip install awscli --upgrade
-      - sudo apt-get update
-      - sudo apt-get install awscli
+      - pip install awscli --upgrade
       - aws s3 sync ./infrastructure/ s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
       # scale nodes
       #- eksctl scale nodegroup --cluster=yhdEks --nodes=5, --name=ng-e56250ca
