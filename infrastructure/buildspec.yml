@@ -2,11 +2,12 @@ version: 0.2
 
 env:
   variables:
-    STACK_NAME: "eksctl-yhdEks-cluster"
+    STACK_NAME: "ecr-repo"
 
 phases:
   pre_build:
     commands:
+      - pip install --upgrade pip
       - pip install awscli --upgrade
       - aws s3 sync ./infrastructure/ s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
       # scale nodes
@@ -16,7 +17,7 @@ phases:
     commands:
       - echo Build started on `date`
       # Environment drift detection
-      - /bin/sh infrastructure/check-drift.sh eksctl-yhdEks-cluster
+      - /bin/sh infrastructure/check-drift.sh $STACK_NAME
 
       # EncryptionConfig detection
 

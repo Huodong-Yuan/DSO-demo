@@ -11,7 +11,7 @@ die () {
 STACK_NAME=$1
 
 ### Check if stack exists yet
-aws cloudformation describe-stacks --stack-name ${STACK_NAME} > /dev/null 2>&1 || exit 0
+aws cloudformation describe-stacks --stack-name ${STACK_NAME} > /dev/null 2>&1 || echo "Stack with id $STACK_NAME does not exist" && exit 0
 
 ### Initiate drift detection
 DRIFT_DETECTION_ID=$(aws cloudformation detect-stack-drift --stack-name ${STACK_NAME} --query StackDriftDetectionId --output text)
