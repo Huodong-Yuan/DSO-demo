@@ -9,7 +9,6 @@ die () {
 ### Expect argument to be provided with the stack name
 [ "$#" -eq 1 ] || die "Usage: $0 [stack_name]"
 STACK_NAME=$1
-echo $STACK_NAME
 
 ### Check if stack exists yet
 echo Checking if stack $STACK_NAME exists yet

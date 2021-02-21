@@ -2,7 +2,8 @@ version: 0.2
 
 env:
   variables:
-    STACK_NAME: "ecr-repo"
+    STACK_ECR: "ecr-repo"
+    STACK_EKS_CLUSTER: "eksctl-yhdEks-cluster"
 
 phases:
   pre_build:
@@ -17,7 +18,8 @@ phases:
     commands:
       - echo Build started on `date`
       # Environment drift detection
-      - /bin/sh infrastructure/check-drift.sh "ecr-repo"
+      - /bin/sh infrastructure/check-drift.sh $STACK_ECR
+      - /bin/sh infrastructure/check-drift.sh $STACK_EKS_CLUSTER
 
       # EncryptionConfig detection
 
