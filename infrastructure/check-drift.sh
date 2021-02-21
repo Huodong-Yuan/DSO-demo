@@ -12,9 +12,16 @@ STACK_NAME=$1
 echo $STACK_NAME
 
 ### Check if stack exists yet
-aws cloudformation describe-stacks --stack-name ${STACK_NAME} > /dev/null 2>&1 || echo "Stack with id $STACK_NAME does not exist" && exit 0
+echo Checking if stack $STACK_NAME exists yet
+if aws cloudformation describe-stacks --stack-name ${STACK_NAME}; then
+    echo "Stack with id $STACK_NAME found." 
+else
+    echo "Stack with id $STACK_NAME does not exist." 
+    exit 0
+fi
 
 ### Initiate drift detection
+echo Initiate drift detection
 DRIFT_DETECTION_ID=$(aws cloudformation detect-stack-drift --stack-name ${STACK_NAME} --query StackDriftDetectionId --output text)
 
 ### Wait for detection to complete
@@ -38,9 +45,12 @@ while true; do
 done
 
 ### Describe the drift details
+echo Describe the drift details
 if [ "DRIFTED" = "${STACK_DRIFT_STATUS}" ]; then 
     aws cloudformation describe-stack-resource-drifts \
         --stack-name ${STACK_NAME} \
         --query 'StackResourceDrifts[?StackResourceDriftStatus!=`IN_SYNC`].{Type:ResourceType, Resource:LogicalResourceId, Status:StackResourceDriftStatus, Diff:PropertyDifferences}' >&2 
     exit 1 
+else
+    echo "Stack $STACK_NAME is IN-SYNC"
 fi
