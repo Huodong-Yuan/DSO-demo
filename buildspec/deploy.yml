@@ -17,7 +17,7 @@ phases:
     commands:
       - echo Build started on `date`
       # Environment drift detection
-      - /bin/sh infrastructure/create-eks.sh $STACK_NAME
+      - /bin/sh script/create-eks.sh $STACK_NAME
       #- eksctl scale nodegroup --cluster=yhdEks --nodes=5, --name=ng-e56250ca
       #- kubectl scale $DEPLOYMENT dso-demo --replicas=3
 

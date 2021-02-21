@@ -10,7 +10,7 @@ phases:
     commands:
       - pip install --upgrade pip
       - pip install awscli --upgrade
-      - aws s3 sync ./infrastructure/*.yaml s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
+      - aws s3 sync ./infrastructure/ s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
       # scale nodes
       #- eksctl scale nodegroup --cluster=yhdEks --nodes=5, --name=ng-e56250ca
 
@@ -18,8 +18,8 @@ phases:
     commands:
       - echo Build started on `date`
       # Environment drift detection
-      - /bin/sh infrastructure/check-drift.sh $STACK_ECR
-      - /bin/sh infrastructure/check-drift.sh $STACK_EKS_CLUSTER
+      - /bin/sh script/check-drift.sh $STACK_ECR
+      - /bin/sh script/check-drift.sh $STACK_EKS_CLUSTER
 
       # EncryptionConfig detection
 
