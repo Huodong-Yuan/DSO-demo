@@ -9,8 +9,9 @@ phases:
     commands:
       - pip install --upgrade pip
       - pip install awscli --upgrade
-      #- aws s3 sync ./infrastructure/*.yaml s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
-      # scale nodes
+      - curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+      - sudo mv /tmp/eksctl /usr/local/bin
+      - eksctl version
 
   build:
     commands:

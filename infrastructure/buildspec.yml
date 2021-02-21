@@ -10,7 +10,7 @@ phases:
     commands:
       - pip install --upgrade pip
       - pip install awscli --upgrade
-      - aws s3 sync ./infrastructure/ s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
+      - aws s3 sync ./infrastructure/*.yaml s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
       # scale nodes
       #- eksctl scale nodegroup --cluster=yhdEks --nodes=5, --name=ng-e56250ca
 
@@ -26,11 +26,11 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
-      #- kubectl scale $DEPLOYMENT dso-demo --replicas=3
+      - echo Nothing to do in post_build
 
-artifacts:
-  files:
-    - infrastructure/* 
+#artifacts:
+#  files:
+#    - infrastructure/* 
 #cache:
 #  paths:
 #    - '/root/.m2/**/*'

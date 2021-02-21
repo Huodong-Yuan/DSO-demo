@@ -11,7 +11,7 @@ env:
 phases:
   pre_build:
     commands:
-      - aws s3 sync ./infrastructure/ s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
+      #- aws s3 sync ./infrastructure/*.yaml s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       # scale nodes
