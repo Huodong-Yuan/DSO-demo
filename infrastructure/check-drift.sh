@@ -9,6 +9,7 @@ die () {
 ### Expect argument to be provided with the stack name
 [ "$#" -eq 1 ] || die "Usage: $0 [stack_name]"
 STACK_NAME=$1
+echo $STACK_NAME
 
 ### Check if stack exists yet
 aws cloudformation describe-stacks --stack-name ${STACK_NAME} > /dev/null 2>&1 || echo "Stack with id $STACK_NAME does not exist" && exit 0

@@ -17,7 +17,7 @@ phases:
     commands:
       - echo Build started on `date`
       # Environment drift detection
-      - /bin/sh infrastructure/check-drift.sh $STACK_NAME
+      - /bin/sh infrastructure/check-drift.sh "ecr-repo"
 
       # EncryptionConfig detection
 
