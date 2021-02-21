@@ -15,7 +15,7 @@ echo Checking if stack $STACK_NAME exists yet
 if aws cloudformation describe-stacks --stack-name ${STACK_NAME}; then
     echo "Stack with id $STACK_NAME found." 
 else
-    echo "Stack with id $STACK_NAME does not exist." 
+    echo "Ignore the drift detectioin for stack $STACK_NAME and continue" 
     exit 0
 fi
 
