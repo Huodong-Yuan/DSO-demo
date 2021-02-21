@@ -16,13 +16,13 @@ phases:
   pre_build:
     commands:
       # upgrade awscli
-      - pip install --upgrade pip
-      - pip install awscli --upgrade
+      #- pip install --upgrade pip
+      #- pip install awscli --upgrade
       # sync templates to S3 bucket
-      - aws s3 sync ./infrastructure/ s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
+      #- aws s3 sync ./infrastructure/ s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
       # upgrade eksctl
-      - curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-      - mv /tmp/eksctl /usr/local/bin
+      #- curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+      #- mv /tmp/eksctl /usr/local/bin
       - eksctl version
       # Create ECR repository if it doesn't exist
       - /bin/sh script/create-ecr.sh $STACK_ECR
