@@ -15,6 +15,8 @@ Resources:
             Sid: AllowPushPull
             Effect: Allow
             Principal: 
+              Service:
+                - "cloudformation.amazonaws.com"
               AWS: 
                 - "arn:aws:iam::937127767762:user/yhd"
                 - "arn:aws:iam::937127767762:user/ljx"

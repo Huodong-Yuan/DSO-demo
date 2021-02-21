@@ -13,9 +13,9 @@ STACK_NAME=$1
 ### Check if stack exists yet
 echo Checking if stack $STACK_NAME exists yet
 if aws cloudformation describe-stacks --stack-name ${STACK_NAME}; then
-    echo "Stack with id $STACK_NAME found." 
+    echo "Stack with id $STACK_NAME found. Continue."
     exit 0
 else
-    echo "Stack with id $STACK_NAME does not exist." 
+    echo "Stack with id $STACK_NAME does not exist. Create one." 
     eksctl create cluster --asg-access -f ./infrastructure/cluster.yaml
 fi

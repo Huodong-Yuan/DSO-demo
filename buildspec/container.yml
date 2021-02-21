@@ -12,8 +12,13 @@ env:
 phases:
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
+      # upgrade awscli
+      - pip install --upgrade pip
+      - pip install awscli --upgrade
+      # Logging into Amazon ECR...
+      - echo Logging into Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - kubectl version --short --client
 
   build:
     commands:
