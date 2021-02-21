@@ -1,0 +1,64 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_ACCOUNT_ID: "93712776776"
+    AWS_DEFAULT_REGION: "ap-east-1"
+    CLUSTER_NAME: "yhdEks"
+    IMAGE_REPO_NAME: "dso-repo"
+    IMAGE_TAG: "1.1"
+    SERVICE: "dso-demo"
+    STACK_ECR: "ecr-repo"
+    STACK_EKS_CLUSTER: "eksctl-yhdEks-cluster"
+    STACK_EKS_NG: "eksctl-yhdEks-nodegroup-workers"
+
+phases:
+  pre_build:
+    commands:
+      # upgrade awscli
+      - pip install --upgrade pip
+      - pip install awscli --upgrade
+      # sync templates to S3 bucket
+      - aws s3 sync ./infrastructure/ s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-
+      # upgrade eksctl
+      - curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+      - mv /tmp/eksctl /usr/local/bin
+      - eksctl version
+      # Create ECR repository if it doesn't exist
+      - /bin/sh script/create-ecr.sh $STACK_ECR
+      - echo Logging into Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME"
+
+      # Create EKS stack if it doesn't exist
+      - /bin/sh script/create-eks.sh $STACK_EKS_CLUSTER
+      #- eksctl scale nodegroup --cluster=yhdEks --nodes=5, --name=ng-e56250ca
+      #- kubectl scale $DEPLOYMENT dso-demo --replicas=3
+      - kubectl version --short --client
+
+  build:
+    commands:
+      - echo Build started on `date`
+      # Environment drift detection for ECR repository
+      - /bin/sh script/check-drift.sh $STACK_ECR
+      # Environment drift detection for EKS cluster
+      #- /bin/sh script/check-drift.sh $STACK_EKS_CLUSTER
+      # Environment drift detection for EKS cluster nodegroup
+      - /bin/sh script/check-drift.sh $STACK_EKS_NG
+
+      # EncryptionConfig detection
+
+      # Build container
+      - echo Building the Docker image...          
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - sleep 1m
+      - /bin/sh script/test-scan-result.sh $IMAGE_REPO_NAME
+      #- kubectl scale $SERVICE dso-demo --replicas=3
+      # Create deployment service if it doesn't exist
+      - /bin/sh script/deploy-container.sh $SERVICE $AWS_ACCOUNT_ID $AWS_DEFAULT_REGION $IMAGE_REPO_NAME $IMAGE_TAG $CLUSTER_NAME
