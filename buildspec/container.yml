@@ -6,7 +6,8 @@ env:
     IMAGE_REPO_NAME: "dso-repo"
     AWS_DEFAULT_REGION: "ap-east-1"
     AWS_ACCOUNT_ID: "93712776776"
-    DEPLOYMENT: "dso-demo"
+    SERVICE: "dso-demo"
+    CLUSTER_NAME: "yhdEks"
 
 phases:
   pre_build:
@@ -29,8 +30,10 @@ phases:
       - /bin/sh script/test-scan-result.sh $IMAGE_REPO_NAME
       #- ISHIGH=$(aws ecr describe-image-scan-findings --repository-name dso-repo --image-id imageTag=1.0 --region ap-east-1 | grep "\"severity\"'':' \"HIGH\"") 
       #- if [ -z "$ISHIGH" ]; then echo "Not high"; else echo "$ISHIGH"; fi
-      #- kubectl scale $DEPLOYMENT dso-demo --replicas=3
-      - kubectl set image deployment/$DEPLOYMENT dso-repo=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      #- kubectl scale $SERVICE dso-demo --replicas=3
+      # Create deployment service if it doesn't exist
+      - /bin/sh script/create-service.sh $SERVICE $AWS_ACCOUNT_ID $AWS_DEFAULT_REGION $IMAGE_REPO_NAME $IMAGE_TAG $CLUSTER_NAME
+      - kubectl set image deployment/$SERVICE dso-repo=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
 
 #artifacts:
 #  files:

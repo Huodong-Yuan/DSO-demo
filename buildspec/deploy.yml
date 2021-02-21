@@ -3,12 +3,19 @@ version: 0.2
 env:
   variables:
     STACK_NAME: "eksctl-yhdEks-cluster"
+    IMAGETAG: "1.1"
+    IMAGE_REPO_NAME: "dso-repo"
+    AWS_DEFAULT_REGION: "ap-east-1"
+    AWS_ACCOUNT_ID: "93712776776"
+    DEPLOYMENT: "dso-demo"
 
 phases:
   pre_build:
     commands:
+      # upgrade awscli
       - pip install --upgrade pip
       - pip install awscli --upgrade
+      # upgrade eksctl
       - curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
       - mv /tmp/eksctl /usr/local/bin
       - eksctl version
@@ -16,12 +23,11 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      # Environment drift detection
+      # Create EKS stack if it doesn't exist
       - /bin/sh script/create-eks.sh $STACK_NAME
       #- eksctl scale nodegroup --cluster=yhdEks --nodes=5, --name=ng-e56250ca
       #- kubectl scale $DEPLOYMENT dso-demo --replicas=3
 
-      # EncryptionConfig detection
 
   post_build:
     commands:
