@@ -15,8 +15,7 @@ Resources:
             Sid: AllowPushPull
             Effect: Allow
             Principal: 
-              Service:
-                - "codebuild.amazonaws.com"
+              Service: "codebuild.amazonaws.com"
               AWS: 
                 - "arn:aws:iam::937127767762:user/yhd"
                 - "arn:aws:iam::937127767762:role/Codebuild-dso-demo-role"
