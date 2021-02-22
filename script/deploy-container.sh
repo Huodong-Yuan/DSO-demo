@@ -35,4 +35,4 @@ else
     echo "Service exists, continue to deploy container"
 fi
 
-kubectl set image deployment/$SERVICE dso-repo=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+kubectl set image deployment/$SERVICE $IMAGE_REPO_NAME=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
