@@ -16,8 +16,8 @@ phases:
   pre_build:
     commands:
       # upgrade awscli
-      #- pip install --upgrade pip
-      #- pip install awscli --upgrade
+      - pip install --upgrade pip
+      - pip install awscli --upgrade
       # sync templates to S3 bucket
       #- aws s3 sync ./infrastructure/ s3://cf-templates-i6aohmzkcsjf-ap-east-1/templates/ --acl public-read
       # upgrade eksctl
