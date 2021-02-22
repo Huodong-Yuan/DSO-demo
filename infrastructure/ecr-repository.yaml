@@ -1,11 +1,18 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
   Elastic Container Registery
+
+Parameters:
+  RepoName:
+    Description: ECR Repository Name
+    Type: String
+    Default: ecr-repo
+
 Resources:
   MyRepository: 
     Type: AWS::ECR::Repository
     Properties: 
-      RepositoryName: "ecr-repo"
+      RepositoryName: !Ref RepoName
       ImageScanningConfiguration: 
         scanOnPush: "true"
       RepositoryPolicyText: 
@@ -15,10 +22,9 @@ Resources:
             Sid: AllowPushPull
             Effect: Allow
             Principal: 
-              Service: "codebuild.amazonaws.com"
               AWS: 
                 - "arn:aws:iam::937127767762:user/yhd"
-                - "arn:aws:iam::937127767762:role/Codebuild-dso-demo-role"
+                - "arn:aws:iam::937127767762:user/ljx"
             Action: 
               - "ecr:GetDownloadUrlForLayer"
               - "ecr:BatchGetImage"
