@@ -17,5 +17,5 @@ if aws cloudformation describe-stacks --stack-name $STACK_NAME; then
     exit 0
 else
     echo "Stack with id $STACK_NAME does not exist. Create one." 
-    eksctl create cluster --asg-access -f ./infrastructure/cluster.yaml
+    eksctl create cluster -f ./infrastructure/cluster.yaml
 fi

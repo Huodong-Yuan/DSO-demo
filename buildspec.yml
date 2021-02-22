@@ -25,7 +25,7 @@ phases:
       #- mv /tmp/eksctl /usr/local/bin
       - eksctl version
       # Create ECR repository if it doesn't exist
-      #- /bin/sh script/create-ecr.sh $STACK_ECR
+      - /bin/sh script/create-ecr.sh $STACK_ECR
       - echo Logging into Amazon ECR...
       - aws sts get-caller-identity
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
