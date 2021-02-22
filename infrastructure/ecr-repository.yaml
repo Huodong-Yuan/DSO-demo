@@ -1,11 +1,18 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
   Elastic Container Registery
+
+Parameters:
+  RepoName:
+    Description: ECR Repository Name
+    Type: String
+    Default: ecr-repo
+
 Resources:
   MyRepository: 
     Type: AWS::ECR::Repository
     Properties: 
-      RepositoryName: "dso-repo"
+      RepositoryName: !Ref RepoName
       ImageScanningConfiguration: 
         scanOnPush: "true"
       RepositoryPolicyText: 
