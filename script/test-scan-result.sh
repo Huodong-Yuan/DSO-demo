@@ -17,5 +17,5 @@ if [ -z "$isHigh" ]; then
     echo "Not high"
 else 
     echo "$isHigh"
-    exit 1
+    exit 0
 fi
