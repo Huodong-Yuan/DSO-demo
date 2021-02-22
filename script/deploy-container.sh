@@ -1,13 +1,7 @@
 #!/bin/sh
 
-set -e
-die () {
-    echo >&2 "$@"
-    exit 1
-}
+echo Start deploy container...
 
-### Expect argument to be provided with the stack name
-[ "$#" -eq 6 ] || die "Usage: $0 [service, aws account id, aws default region, ecr repository name, image tage, cluster name]"
 SERVICE=$1
 AWS_ACCOUNT_ID=$2
 AWS_DEFAULT_REGION=$3
