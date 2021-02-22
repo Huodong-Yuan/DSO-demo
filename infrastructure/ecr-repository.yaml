@@ -19,8 +19,7 @@ Resources:
                 - "codebuild.amazonaws.com"
               AWS: 
                 - "arn:aws:iam::937127767762:user/yhd"
-                - "arn:aws:iam::937127767762:user/ljx"
-                - "arn:aws:iam::937127767762:role/service-role/codebuild-dev-sec-ops-demo-svc-role"
+                - "arn:aws:iam::937127767762:role/Codebuild-dso-demo-role"
             Action: 
               - "ecr:GetDownloadUrlForLayer"
               - "ecr:BatchGetImage"

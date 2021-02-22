@@ -10,6 +10,8 @@ die () {
 [ "$#" -eq 1 ] || die "Usage: $0 [stack_name]"
 STACK_NAME=$1
 
+aws sts get-caller-identity
+
 ### Check if stack exists yet
 echo Checking if stack $STACK_NAME exists yet
 if aws cloudformation describe-stacks --stack-name $STACK_NAME; then
