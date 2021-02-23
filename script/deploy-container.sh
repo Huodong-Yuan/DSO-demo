@@ -33,6 +33,7 @@ if [ -z "$HAS_SERVICE" ]; then
     echo "Service not exist, deploy one."
     kubectl create deployment $SERVICE --image=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
     kubectl expose deployment $SERVICE --type=LoadBalancer --port 80 --target-port 80
+    sleep 30s
 else 
     echo "Service exists, continue to deploy container"
     kubectl set image deployment/$SERVICE $IMAGE_REPO_NAME=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
