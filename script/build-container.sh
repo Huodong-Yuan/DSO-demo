@@ -1,12 +1,11 @@
 #!/bin/sh
 
-### Expect argument to be provided with the stack name
-[ "$#" -eq 6 ] || die "Usage: $0 [aws account id, aws default region, ecr repository name, image tage]"
 AWS_ACCOUNT_ID=$1
 AWS_DEFAULT_REGION=$2
 IMAGE_REPO_NAME=$3
 IMAGE_TAG=$4
 ECR_STACK_NAME=$5
+echo AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION IMAGE_REPO_NAME=$IMAGE_REPO_NAME IMAGE_TAG=$IMAGE_TAG ECR_STACK_NAME=$ECR_STACK_NAME
 
 echo Checking if stack $ECR_STACK_NAME exists yet
 if aws cloudformation describe-stacks --stack-name $ECR_STACK_NAME; then

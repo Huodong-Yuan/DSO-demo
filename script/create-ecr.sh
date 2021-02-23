@@ -1,14 +1,7 @@
 #!/bin/sh
 
-set -e
-die () {
-    echo >&2 "$@"
-    exit 1
-}
-
-### Expect argument to be provided with the stack name
-[ "$#" -eq 1 ] || die "Usage: $0 [stack_name]"
 STACK_NAME=$1
+echo STACK_NAME=$STACK_NAME
 
 aws sts get-caller-identity
 

@@ -1,15 +1,9 @@
 #!/bin/sh
 
-set -e
-die () {
-    echo >&2 "$@"
-    exit 1
-}
-
-### Expect argument to be provided with the ECR repository name
 [ "$#" -eq 2 ] || die "Usage: $0 [ecr_repo]"
 ECR_REPO=$1
 IMAGE_TAG=$2
+echo ECR_REPO=$ECR_REPO IMAGE_TAG=$IMAGE_TAG
 
 echo Checking if ECR repository $ECR_REPO exists yet
 if aws ecr describe-images --repository-name $ECR_REPO --image-ids imageTag=$IMAGE_TAG; then
