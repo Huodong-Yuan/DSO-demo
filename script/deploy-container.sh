@@ -9,6 +9,7 @@ IMAGE_REPO_NAME=$4
 IMAGE_TAG=$5
 CLUSTER_NAME=$6
 ECR_STACK_NAME=$7
+echo SERVICE=$SERVICE AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION IMAGE_REPO_NAME=$IMAGE_REPO_NAME IMAGE_TAG=$IMAGE_TAG CLUSTER_NAME=$CLUSTER_NAME ECR_STACK_NAME=$ECR_STACK_NAME
 
 echo Checking if stack $ECR_STACK_NAME exists yet
 if aws cloudformation describe-stacks --stack-name $ECR_STACK_NAME; then
@@ -26,6 +27,7 @@ aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --usernam
 aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $CLUSTER_NAME
 
 HAS_SERVICE=$(kubectl get svc | grep $SERVICE);
+echo HAS_SERVICE=$HAS_SERVICE
 
 if [ -z "$HAS_SERVICE" ]; then 
     echo "Service not exist, deploy one."
