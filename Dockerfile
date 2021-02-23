@@ -2,4 +2,4 @@
 #COPY ./static-html/ /usr/local/apache2/htdocs/
 
 FROM nginx
-#COPY index.html /usr/share/nginx/html/index.html
+COPY index.html /usr/share/nginx/html/index.html
