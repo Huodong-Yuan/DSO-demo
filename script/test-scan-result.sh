@@ -13,11 +13,11 @@ else
     exit 0
 fi
 
-isHigh=$(aws ecr describe-image-scan-findings --repository-name $ECR_REPO --image-id imageTag=$IMAGE_TAG --region ap-east-1 | grep "\"severity\": \"HIGH\"");
+CRITICAL=$(aws ecr describe-image-scan-findings --repository-name $ECR_REPO --image-id imageTag=$IMAGE_TAG --region ap-east-1 | grep "\"severity\": \"CRITICAL\"");
 
-if [ -z "$isHigh" ]; then 
-    echo "Not high"
+if [ -z "$CRITICAL" ]; then 
+    echo "Not CRITICAL"
 else 
-    echo "$isHigh"
-    exit 0
+    echo "$CRITICAL"
+    exit 1
 fi
