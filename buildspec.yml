@@ -6,7 +6,7 @@ env:
     AWS_DEFAULT_REGION: "ap-east-1"
     CLUSTER_NAME: "yhdEks"
     IMAGE_REPO_NAME: "ecr-repo"
-    IMAGE_TAG: "1.2"
+    IMAGE_TAG: "latest"
     SERVICE: "dso-demo"
     STACK_ECR: "ecr-repo"
     STACK_EKS_CLUSTER: "eksctl-yhdEks-cluster"
